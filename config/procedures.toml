@@ -1,0 +1,330 @@
+# Procedures covered (M2 default: common shoppable services, mostly from CMS's shoppable list).
+#
+# keywords: regex used to pick out rows that have NO standard code but whose description might be
+#           this procedure (Phase 3 then decides with embeddings). aka: other phrasings used as anchors.
+#
+# Each procedure has one main code and optional related codes (close variants kept in the
+# extract so Phase 3 can decide what is comparable). code_family decides which code types
+# in a price file count as a match:
+#   cpt  -> CPT, HCPCS          (outpatient / professional services)
+#   drg  -> MS-DRG, TRIS-DRG    (inpatient stays; TRICARE uses MS-DRG numbering)
+# APR-DRG (used by Medicaid) numbers stays differently, so it never matches an MS-DRG code.
+
+[families]
+cpt = ["CPT", "HCPCS"]
+drg = ["MS-DRG", "TRIS-DRG"]
+
+# ------------------------------------------------------------------ imaging
+[[procedure]]
+id = "mri_knee"
+name = "MRI of the knee (no contrast)"
+category = "Imaging"
+family = "cpt"
+code = "73721"
+related = ["73722", "73723"]
+keywords = 'MRI.*(KNEE|LOWER EXT|LWR EXT|LE JOINT|LOW EXT)'
+aka = ["MRI knee without contrast", "MRI lower extremity joint w/o contrast"]
+
+[[procedure]]
+id = "mri_brain"
+name = "MRI of the brain (with and without contrast)"
+category = "Imaging"
+family = "cpt"
+code = "70553"
+related = ["70551", "70552"]
+keywords = 'MRI.*(BRAIN|HEAD)'
+aka = ["MRI brain with and without contrast", "MRI head w/o & w/ contrast"]
+
+[[procedure]]
+id = "mri_lumbar_spine"
+name = "MRI of the lower back (no contrast)"
+category = "Imaging"
+family = "cpt"
+code = "72148"
+related = ["72149", "72158"]
+keywords = 'MRI.*(LUMBAR|L-?SPINE|LS SPINE|LUMB)'
+aka = ["MRI lumbar spine without contrast"]
+
+[[procedure]]
+id = "ct_head"
+name = "CT of the head (no contrast)"
+category = "Imaging"
+family = "cpt"
+code = "70450"
+keywords = '\bCT\b.*(HEAD|BRAIN)'
+aka = ["CT head without contrast", "CT brain w/o contrast"]
+
+[[procedure]]
+id = "ct_abdomen_pelvis_contrast"
+name = "CT of the abdomen and pelvis (with contrast)"
+category = "Imaging"
+family = "cpt"
+code = "74177"
+keywords = '\bCT\b.*ABD.*PEL'
+aka = ["CT abdomen and pelvis with contrast"]
+
+[[procedure]]
+id = "ct_abdomen_pelvis"
+name = "CT of the abdomen and pelvis (no contrast)"
+category = "Imaging"
+family = "cpt"
+code = "74176"
+keywords = '\bCT\b.*ABD.*PEL'
+aka = ["CT abdomen and pelvis without contrast"]
+
+[[procedure]]
+id = "mammogram_screening"
+name = "Screening mammogram (both breasts)"
+category = "Imaging"
+family = "cpt"
+code = "77067"
+related = ["77063"]
+keywords = 'MAMMO'
+aka = ["screening mammography bilateral", "3D screening mammogram"]
+
+[[procedure]]
+id = "xray_chest"
+name = "Chest X-ray (2 views)"
+category = "Imaging"
+family = "cpt"
+code = "71046"
+keywords = '(X-?RAY|\bXR\b|\bDX\b).*CHEST|CHEST.*(2 ?V|TWO VIEW|PA.*LAT)'
+aka = ["chest x-ray 2 views", "XR chest PA and lateral"]
+
+[[procedure]]
+id = "ultrasound_abdomen"
+name = "Ultrasound of the abdomen (complete)"
+category = "Imaging"
+family = "cpt"
+code = "76700"
+keywords = '(\bUS\b|ULTRASOUND|SONO|ECHO).*ABD'
+aka = ["ultrasound abdomen complete"]
+
+[[procedure]]
+id = "ultrasound_pregnancy"
+name = "Pregnancy ultrasound (first trimester)"
+category = "Imaging"
+family = "cpt"
+code = "76805"
+keywords = '(\bUS\b|ULTRASOUND|SONO).*(\bOB\b|PREG|FETAL)'
+aka = ["obstetric ultrasound first trimester"]
+
+# ------------------------------------------------------------------ procedures and surgery
+[[procedure]]
+id = "colonoscopy"
+name = "Colonoscopy (diagnostic)"
+category = "Procedures"
+family = "cpt"
+code = "45378"
+keywords = 'COLONOSCOPY'
+aka = ["colonoscopy diagnostic"]
+
+[[procedure]]
+id = "colonoscopy_biopsy"
+name = "Colonoscopy with biopsy"
+category = "Procedures"
+family = "cpt"
+code = "45380"
+keywords = 'COLONOSCOPY'
+aka = ["colonoscopy with biopsy"]
+
+[[procedure]]
+id = "colonoscopy_polyp_removal"
+name = "Colonoscopy with polyp removal"
+category = "Procedures"
+family = "cpt"
+code = "45385"
+keywords = 'COLONOSCOPY'
+aka = ["colonoscopy with polypectomy snare"]
+
+[[procedure]]
+id = "upper_gi_endoscopy"
+name = "Upper GI endoscopy with biopsy"
+category = "Procedures"
+family = "cpt"
+code = "43239"
+keywords = '\bEGD\b|UPPER GI ENDO|ESOPHAGOGASTRODUODENOSCOPY'
+aka = ["EGD with biopsy", "upper endoscopy with biopsy"]
+
+[[procedure]]
+id = "cataract_surgery"
+name = "Cataract surgery with lens implant"
+category = "Surgery"
+family = "cpt"
+code = "66984"
+keywords = 'CATARACT|PHACO'
+aka = ["cataract extraction with intraocular lens insertion"]
+
+[[procedure]]
+id = "knee_arthroscopy"
+name = "Knee arthroscopy (meniscus repair/removal)"
+category = "Surgery"
+family = "cpt"
+code = "29881"
+keywords = 'ARTHROSCOPY|MENISCECTOMY'
+aka = ["knee arthroscopy meniscectomy"]
+
+[[procedure]]
+id = "gallbladder_removal"
+name = "Gallbladder removal (laparoscopic)"
+category = "Surgery"
+family = "cpt"
+code = "47562"
+keywords = 'CHOLECYSTECTOMY'
+aka = ["laparoscopic cholecystectomy"]
+
+[[procedure]]
+id = "hernia_repair"
+name = "Inguinal hernia repair"
+category = "Surgery"
+family = "cpt"
+code = "49505"
+keywords = 'HERNIA'
+aka = ["inguinal hernia repair"]
+
+[[procedure]]
+id = "knee_replacement"
+name = "Total knee replacement (procedure code)"
+category = "Surgery"
+family = "cpt"
+code = "27447"
+keywords = 'KNEE.*(ARTHROPLASTY|REPLACEMENT)|\bTKA\b|TOTAL KNEE'
+aka = ["total knee arthroplasty"]
+
+[[procedure]]
+id = "hip_replacement"
+name = "Total hip replacement (procedure code)"
+category = "Surgery"
+family = "cpt"
+code = "27130"
+keywords = 'HIP.*(ARTHROPLASTY|REPLACEMENT)|\bTHA\b|TOTAL HIP'
+aka = ["total hip arthroplasty"]
+
+[[procedure]]
+id = "joint_replacement_inpatient"
+name = "Hip or knee replacement, hospital stay (DRG 470)"
+category = "Hospital stays"
+family = "drg"
+code = "470"
+related = ["469"]
+
+[[procedure]]
+id = "vaginal_delivery"
+name = "Vaginal delivery, hospital stay (DRG 807)"
+category = "Hospital stays"
+family = "drg"
+code = "807"
+related = ["805", "806"]
+
+[[procedure]]
+id = "c_section"
+name = "C-section delivery, hospital stay (DRG 788)"
+category = "Hospital stays"
+family = "drg"
+code = "788"
+related = ["786", "787"]
+
+# ------------------------------------------------------------------ emergency room
+[[procedure]]
+id = "er_visit_level_3"
+name = "Emergency room visit, level 3 (moderate)"
+category = "Emergency"
+family = "cpt"
+code = "99283"
+related = ["99281", "99282"]
+keywords = '(\bER\b|\bED\b|EMERG).*(LEVEL|LVL|LEV|VISIT)'
+aka = ["emergency department visit level 3"]
+
+[[procedure]]
+id = "er_visit_level_4"
+name = "Emergency room visit, level 4 (high)"
+category = "Emergency"
+family = "cpt"
+code = "99284"
+keywords = '(\bER\b|\bED\b|EMERG).*(LEVEL|LVL|LEV|VISIT)'
+aka = ["emergency department visit level 4"]
+
+[[procedure]]
+id = "er_visit_level_5"
+name = "Emergency room visit, level 5 (highest)"
+category = "Emergency"
+family = "cpt"
+code = "99285"
+keywords = '(\bER\b|\bED\b|EMERG).*(LEVEL|LVL|LEV|VISIT)'
+aka = ["emergency department visit level 5"]
+
+# ------------------------------------------------------------------ lab tests
+[[procedure]]
+id = "lab_basic_metabolic"
+name = "Basic metabolic panel"
+category = "Lab tests"
+family = "cpt"
+code = "80048"
+keywords = 'BASIC METABOLIC|\bBMP\b'
+aka = ["basic metabolic panel", "BMP"]
+
+[[procedure]]
+id = "lab_comprehensive_metabolic"
+name = "Comprehensive metabolic panel"
+category = "Lab tests"
+family = "cpt"
+code = "80053"
+keywords = 'COMP(REHENSIVE)?\.? METABOLIC|\bCMP\b'
+aka = ["comprehensive metabolic panel", "CMP"]
+
+[[procedure]]
+id = "lab_lipid_panel"
+name = "Cholesterol (lipid) panel"
+category = "Lab tests"
+family = "cpt"
+code = "80061"
+keywords = 'LIPID (PANEL|PROFILE)'
+aka = ["lipid panel"]
+
+[[procedure]]
+id = "lab_cbc"
+name = "Complete blood count (CBC) with differential"
+category = "Lab tests"
+family = "cpt"
+code = "85025"
+related = ["85027"]
+keywords = '\bCBC\b|COMPLETE BLOOD COUNT'
+aka = ["CBC with automated differential"]
+
+[[procedure]]
+id = "lab_tsh"
+name = "Thyroid test (TSH)"
+category = "Lab tests"
+family = "cpt"
+code = "84443"
+keywords = '\bTSH\b|THYROID STIM'
+aka = ["thyroid stimulating hormone TSH"]
+
+[[procedure]]
+id = "lab_hba1c"
+name = "Diabetes test (hemoglobin A1c)"
+category = "Lab tests"
+family = "cpt"
+code = "83036"
+keywords = 'A1C|HEMOGLOBIN A1|GLYCATED|GLYCOSYLATED'
+aka = ["hemoglobin A1c"]
+
+[[procedure]]
+id = "lab_psa"
+name = "Prostate test (PSA)"
+category = "Lab tests"
+family = "cpt"
+code = "84153"
+keywords = '\bPSA\b|PROSTATE SPEC'
+aka = ["prostate specific antigen total"]
+
+# ------------------------------------------------------------------ other
+[[procedure]]
+id = "ecg"
+name = "Electrocardiogram (ECG)"
+category = "Tests"
+family = "cpt"
+code = "93005"
+related = ["93000"]
+keywords = '\bECG\b|\bEKG\b|ELECTROCARDIOGRAM'
+aka = ["electrocardiogram routine 12-lead tracing"]

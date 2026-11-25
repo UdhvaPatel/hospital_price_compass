@@ -1,0 +1,25 @@
+# Metro area and scope (M2 defaults: Phoenix, AZ)
+
+[metro]
+name = "Phoenix-Mesa-Chandler, AZ"
+state = "AZ"
+# Phoenix-Mesa-Chandler MSA (CBSA 38060) = Maricopa + Pinal counties
+counties = ["MARICOPA", "PINAL"]
+
+[scope]
+# Hospital types that offer the chosen shoppable procedures (imaging, surgery, delivery, ER, labs).
+in_scope_types = ["Acute Care Hospitals", "Critical Access Hospitals", "Childrens"]
+# Federal hospitals (VA, Indian Health Service) are exempt from the Hospital Price Transparency rule.
+exempt_ownership = ["Government - Federal", "Veterans Health Administration"]
+
+[cms]
+# CMS Provider Data Catalog dataset "Hospital General Information"
+hospital_dataset_id = "xubh-q36u"
+metastore_url = "https://data.cms.gov/provider-data/api/1/metastore/schemas/dataset/items/{id}"
+
+[http]
+# Always identify honestly. Sites whose bot protection refuses this agent are recorded as
+# "blocked", never bypassed.
+user_agent = "hospital-price-compass/0.1 (public price transparency research)"
+timeout_seconds = 30
+delay_seconds = 1.0

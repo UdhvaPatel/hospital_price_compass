@@ -1,0 +1,10 @@
+# NVIDIA NIM (build.nvidia.com).
+# The API key is NOT stored here (this repo is public): it comes from the NVIDIA_API_KEY
+# environment variable, or locally from the git-ignored .env file.
+base_url = "https://integrate.api.nvidia.com/v1"
+
+# Checked 2026-11-22. The earlier picks (llama-3.3-70b-instruct, nv-embedqa-e5-v5) reached end of life in Aug 2026.
+chat_model = "nvidia/nemotron-3.5-lightning-30b-a3b"   # reasoning model: thinks before replying
+chat_max_tokens = 8000                                  # room for thinking + the answer (4000 ran out on 23 of 203)
+embed_model = "nvidia/nemotron-3.5-embed-8b"           # payer / plan / description matching (Phase 3)
+timeout_seconds = 120

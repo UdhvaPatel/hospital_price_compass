@@ -1,0 +1,249 @@
+# Canonical insurers for the Phoenix metro.
+#
+# Matching order (hpc/normalize/payers.py):
+#   1. config/payer_decisions.csv   your reviewed decisions (always win)
+#   2. `patterns` below             regex on the cleaned, upper-cased payer name (first match wins,
+#                                   so more specific entries come first)
+#   3. NIM embeddings               nearest canonical name; auto-accepted only above the threshold
+#   4. otherwise                    kept under its own cleaned name ("other:<name>") and, if close
+#                                   to a canonical insurer, listed in data/review/payer_review.csv
+#
+# `parent` groups brands of one company (for display); `default_plan_type` is used when neither
+# the payer nor the plan name says what kind of coverage it is.
+
+[matching]
+auto_accept = 0.72        # embedding similarity needed to accept automatically. Checked 2026-11-22 on
+                          # 130 alias-labelled names (leave-one-out): >=0.70 was 100% correct, >=0.60 95%.
+min_margin = 0.06         # and this far ahead of the second-best insurer
+review_floor = 0.55       # between review_floor and auto_accept -> review file
+default_top = ["uhc", "bcbs_az", "aetna", "cigna", "humana"]   # M2 default insurers to show first
+
+# ---------------------------------------------------------------- government programs first
+[[payer]]
+id = "tricare"
+name = "TRICARE"
+patterns = ['TRICARE', 'HEALTH ?NET FEDERAL', 'HUMANA MILITARY']
+default_plan_type = "tricare"
+
+[[payer]]
+id = "va_ccn"
+name = "VA Community Care (TriWest)"
+patterns = ['TRIWEST', '\bVA CCN\b', '\bTRIWEST VA\b', 'VETERANS']
+default_plan_type = "va"
+
+[[payer]]
+id = "medicare"
+name = "Medicare (traditional)"
+patterns = ['^MEDICARE$', '^MEDICARE (B|A)\b', 'MEDICARE SHADOW', '^MEDICARE PART', '\bNORIDIAN\b']
+default_plan_type = "medicare"
+
+[[payer]]
+id = "medicare_advantage_generic"
+name = "Medicare Advantage (unspecified plan)"
+patterns = ['^GENERIC MEDICARE ADV']
+default_plan_type = "medicare_advantage"
+
+# ---------------------------------------------------------------- Medicaid (AHCCCS) plans
+[[payer]]
+id = "mercy_care"
+name = "Mercy Care"
+patterns = ['MERCY CARE']
+default_plan_type = "medicaid"
+
+[[payer]]
+id = "health_choice"
+name = "Health Choice Arizona"
+parent = "Blue Cross Blue Shield of Arizona"
+patterns = ['HEALTH ?CHOICE']
+default_plan_type = "medicaid"
+
+[[payer]]
+id = "care1st"
+name = "Care1st"
+patterns = ['CARE ?1ST', 'CARE FIRST']
+default_plan_type = "medicaid"
+
+[[payer]]
+id = "banner_plans"
+name = "Banner Health plans"
+patterns = ['^BANNER', 'B ?UHP', '^AHC UNIVERSITY']
+default_plan_type = "unknown"
+
+[[payer]]
+id = "apipa"
+name = "UnitedHealthcare Community Plan (APIPA)"
+parent = "UnitedHealthcare"
+patterns = ['APIPA', 'ARIZONA PHYSICIANS IPA']
+default_plan_type = "medicaid"
+
+[[payer]]
+id = "ahcccs"
+name = "AHCCCS (Arizona Medicaid)"
+patterns = ['AHCCC?S', '^AHC\b', '^STATE AHCCCS', '\bRBHA\b']
+default_plan_type = "medicaid"
+
+[[payer]]
+id = "az_complete_health"
+name = "Arizona Complete Health"
+parent = "Centene"
+patterns = ['ARIZONA COMPLETE', '\bAZ COMPLETE']
+default_plan_type = "medicaid"
+
+[[payer]]
+id = "ambetter"
+name = "Ambetter"
+parent = "Centene"
+patterns = ['AMBETTER']
+default_plan_type = "exchange"
+
+[[payer]]
+id = "wellcare"
+name = "Wellcare / Allwell"
+parent = "Centene"
+patterns = ['WELL ?CARE', 'ALLWELL']
+default_plan_type = "medicare_advantage"
+
+[[payer]]
+id = "health_net"
+name = "Health Net"
+parent = "Centene"
+patterns = ['HEALTH ?NET']
+default_plan_type = "unknown"
+
+[[payer]]
+id = "molina"
+name = "Molina Healthcare"
+patterns = ['MOLINA']
+default_plan_type = "medicaid"
+
+# ---------------------------------------------------------------- the big five (M2 defaults)
+[[payer]]
+id = "uhc"
+name = "UnitedHealthcare"
+patterns = ['\bUHC\b', 'UNITED ?HEALTH', '^UNITED\b', 'UNITED BH', '\bAARP\b', '\bUMR\b', 'SUREST',
+            'ALL SAVERS', '\bOPTUM', 'LIFEPRINT', 'MEDICARECOMPLETE']
+default_plan_type = "unknown"
+
+[[payer]]
+id = "bcbs_az"
+name = "Blue Cross Blue Shield of Arizona"
+patterns = ['\bBCBS', 'BLUE ?CROSS', 'BLUE ?SHIELD', '\bBXBS']
+default_plan_type = "commercial"
+
+[[payer]]
+id = "aetna"
+name = "Aetna"
+patterns = ['AETNA', 'MERITAIN']
+default_plan_type = "unknown"
+
+[[payer]]
+id = "cigna"
+name = "Cigna"
+patterns = ['CIGNA', 'EVERNORTH']
+default_plan_type = "commercial"
+
+[[payer]]
+id = "humana"
+name = "Humana"
+patterns = ['HUMANA']
+default_plan_type = "unknown"
+
+# ---------------------------------------------------------------- other insurers and networks
+[[payer]]
+id = "oscar"
+name = "Oscar Health"
+patterns = ['\bOSCAR']
+default_plan_type = "exchange"
+
+[[payer]]
+id = "devoted"
+name = "Devoted Health"
+patterns = ['DEVOTED']
+default_plan_type = "medicare_advantage"
+
+[[payer]]
+id = "scan"
+name = "SCAN Health Plan"
+patterns = ['^SCAN\b']
+default_plan_type = "medicare_advantage"
+
+[[payer]]
+id = "alignment"
+name = "Alignment Health"
+patterns = ['ALIGNMENT']
+default_plan_type = "medicare_advantage"
+
+[[payer]]
+id = "imperial"
+name = "Imperial Health Plan"
+patterns = ['IMPERIAL']
+default_plan_type = "medicare_advantage"
+
+[[payer]]
+id = "gold_kidney"
+name = "Gold Kidney Health Plan"
+patterns = ['GOLD KIDNEY']
+default_plan_type = "medicare_advantage"
+
+[[payer]]
+id = "kaiser"
+name = "Kaiser Permanente"
+patterns = ['KAISER']
+default_plan_type = "commercial"
+
+[[payer]]
+id = "wellpoint"
+name = "Wellpoint (formerly Amerigroup)"
+parent = "Elevance Health"
+patterns = ['WELLPOINT', 'AMERIGROUP']
+default_plan_type = "unknown"
+
+[[payer]]
+id = "upmc"
+name = "UPMC Health Plan"
+patterns = ['\bUPMC']
+default_plan_type = "commercial"
+
+[[payer]]
+id = "medica"
+name = "Medica"
+patterns = ['^MEDICA$', '^MEDICA\b']
+default_plan_type = "commercial"
+
+[[payer]]
+id = "multiplan"
+name = "MultiPlan (rental network)"
+patterns = ['MULTI ?PLAN']
+default_plan_type = "rental_network"
+
+[[payer]]
+id = "first_health"
+name = "First Health (rental network)"
+parent = "Aetna"
+patterns = ['FIRST HEALTH']
+default_plan_type = "rental_network"
+
+[[payer]]
+id = "coventry"
+name = "Coventry"
+parent = "Aetna"
+patterns = ['COVENTRY']
+default_plan_type = "rental_network"
+
+[[payer]]
+id = "magellan"
+name = "Magellan Health"
+patterns = ['MAGELLAN']
+default_plan_type = "unknown"
+
+[[payer]]
+id = "az_priority_care"
+name = "Arizona Priority Care"
+patterns = ['ARIZONA PRIORITY CARE', '^AZPC$']
+default_plan_type = "medicare_advantage"
+
+[[payer]]
+id = "self_pay"
+name = "Self-pay (cash)"
+patterns = ['^SELF ?PAY$']
+default_plan_type = "self_pay"

@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Secrets: never commit (the NVIDIA key lives in .env locally, in GitHub secrets in CI)
+.env
+.env.*
+
+# Pipeline working data: regenerated each run, or kept in the PRIVATE vault repo (hpc/vault.py).
+# Only the hospital list (phase0 discovery + registry) is public; the site's data lives in site/data.
+data/*
+!data/phase0/
+!data/registry/
+# copies of hospitals' cms-hpt.txt files contain staff contact names/emails: not republished
+data/phase0/hpt_files/
+.vault/
+
+# CMS files containing AMA-licensed CPT content: keep local, never publish
+data/reference/medicare/opps_cy2026/
+data/reference/medicare/clfs_2026/

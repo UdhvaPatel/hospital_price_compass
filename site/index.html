@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compare hospital prices in Phoenix | Hospital Price Compass</title>
+  <meta name="description" content="What will a procedure cost at each Phoenix-area hospital, with your insurance or paying cash? Prices from hospitals' own published files, checked for quality.">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <main id="main" class="wrap">
+    <h1>Compare hospital prices</h1>
+    <p class="lead">Pick a procedure and how you'd pay. Hospitals are ranked by the price they publish for that insurer
+      and plan type (or for paying cash). <span id="asof-top"></span></p>
+
+    <form class="controls" id="controls" aria-label="Choose what to compare">
+      <div class="field"><label for="proc">Procedure</label><select id="proc"></select></div>
+      <div class="field"><label for="payer">Insurer, or cash</label><select id="payer"></select></div>
+      <div class="field"><label for="ptype">Plan type</label><select id="ptype"></select></div>
+      <div class="field"><label for="zip">Your ZIP code (optional)</label>
+        <input id="zip" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" placeholder="e.g. 85004"></div>
+      <div class="field"><label for="sort">Sort by</label>
+        <select id="sort"><option value="price">Price, low to high</option><option value="distance">Distance</option></select></div>
+    </form>
+
+    <div id="results" aria-live="polite"></div>
+  </main>
+  <script type="module" src="assets/pages/compare.js"></script>
+</body>
+</html>

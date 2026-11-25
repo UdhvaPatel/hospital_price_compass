@@ -1,0 +1,144 @@
+# Where to look for each hospital's cms-hpt.txt.
+#
+# CMS's hospital list has no website column, so this is curated by hand.
+# [systems.*]  : display name, name pattern (regex on the CMS facility name, case-insensitive) -> website domains.
+# [overrides.*]: per CCN; wins over systems. `location` pins the cms-hpt.txt location-name
+#                when the names differ too much for automatic matching.
+
+[systems.banner]
+display = "Banner Health"
+pattern = "^BANNER"
+domains = ["www.bannerhealth.com"]
+
+[systems.honorhealth]
+display = "HonorHealth"
+pattern = "HONOR ?HEALTH"
+domains = ["www.honorhealth.com"]
+
+[systems.dignity]
+display = "Dignity Health (CommonSpirit)"
+pattern = "DIGNITY HEALTH|ST JOSEPHS HOSPITAL|CHANDLER REGIONAL|MERCY GILBERT"
+domains = ["www.commonspirit.org"]
+
+[systems.abrazo]
+display = "Abrazo Health (Tenet)"
+pattern = "^ABRAZO"
+domains = ["www.abrazohealth.com"]
+
+[systems.valleywise]
+display = "Valleywise Health"
+pattern = "VALLEYWISE"
+domains = ["valleywisehealth.org"]
+
+[systems.mayo]
+display = "Mayo Clinic"
+pattern = "MAYO CLINIC"
+domains = ["www.mayoclinic.org"]
+
+[systems.phoenix_childrens]
+display = "Phoenix Children's"
+pattern = "PHOENIX CHILDREN"
+domains = ["phoenixchildrens.org"]
+
+[systems.city_of_hope]
+display = "City of Hope"
+pattern = "CITY OF HOPE"
+domains = ["www.cityofhope.org"]
+
+[systems.exceptional]
+display = "Exceptional HealthCare"
+pattern = "EXCEPTIONAL COMMUNITY HOSPITAL"
+domains = ["ehc24.com"]
+
+[overrides.030152]  # Exceptional Community Hospital - Maricopa
+# Its file labels every code "CDM", but the values are CPT codes (e.g. 10060 = I&D of abscess).
+code_type_aliases = { CDM = "CPT" }
+
+[overrides.030107]  # Arizona Spine and Joint Hospital
+domains = ["azspineandjoint.com"]
+
+[overrides.030108]  # The CORE Institute Specialty Hospital
+domains = ["www.thecoreinstitutehospital.com"]
+
+[overrides.030112]  # Arizona Orthopedic and Surgical Specialty Hospital (website not yet identified)
+domains = ["www.aosh.com"]
+
+[overrides.030153]  # East Valley ER & Hospital (Nutex Health)
+domains = ["www.eastvalleyhospital.com"]
+
+[overrides.031300]  # Wickenburg Community Hospital
+domains = ["www.wickhosp.com"]
+
+[overrides.030138]  # City of Hope Phoenix (Goodyear) is listed under its legal entity name
+domains = ["www.cityofhope.org"]
+location = "Western Regional Medical Center"
+mrf_url = "https://www.cityofhope.org/320197974_western-regional-medical-center-_standardcharges.json"
+
+[overrides.030136]  # CMS: "Dignity Health - Arizona General Hospital", Laveen
+domains = ["www.commonspirit.org"]
+location = "Arizona General Hospital Laveen"
+
+[overrides.030139]  # CMS: "Dignity Health Arizona General Hospital", Mesa
+domains = ["www.commonspirit.org"]
+location = "Arizona General Hospital Mesa"
+
+[overrides.030093]  # CMS "Banner Del E. Webb" vs file "Banner Del Webb"
+domains = ["www.bannerhealth.com"]
+location = "Banner Del Webb Medical Center"
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/900389312_banner-del-e-webb-medical-center_standardcharges.csv"
+
+[overrides.030103]  # Mayo lists its Phoenix hospital as "Mayo Clinic Arizona"
+location = "Mayo Clinic Arizona"
+
+# --- Manually recorded price-file addresses -------------------------------------------
+# These systems' cms-hpt.txt refuses automated clients (HTTP 403), so the mrf-url values
+# were copied from their cms-hpt.txt (as seen on 2026-11-22). Used only when cms-hpt.txt
+# can't be read. Re-check them whenever the run reports a broken price file.
+
+[overrides.030002]  # Banner - University Medical Center Phoenix
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/270036499_banner-university-medical-center-phoenix_standardcharges.csv"
+
+[overrides.030016]  # Banner Casa Grande
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/450233470_banner-casa-grande-medical-center_standardcharges.csv"
+
+[overrides.030061]  # Banner Boswell
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/900389314_banner-boswell-medical-center_standardcharges.csv"
+
+[overrides.030065]  # Banner Desert
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/900054201_banner-desert-medical-center_standardcharges.csv"
+
+[overrides.030088]  # Banner Baywood
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/363386394_banner-baywood-medical-center_standardcharges.csv"
+
+[overrides.030089]  # Banner Thunderbird
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/270036484_banner-thunderbird-medical-center_standardcharges.csv"
+
+[overrides.030105]  # Banner Heart Hospital
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/861035549_banner-heart-hospital_standardcharges.csv"
+
+[overrides.030115]  # Banner Estrella
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/900065118_banner-estrella-medical-center_standardcharges.csv"
+
+[overrides.030122]  # Banner Gateway
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/900220728_banner-gateway-medical-center_standardcharges.csv"
+
+[overrides.030130]  # Banner Ironwood
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/900412842_banner-ironwood-medical-center_standardcharges.csv"
+
+[overrides.030134]  # Banner Goldfield
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/900981239_banner-goldfield-medical-center_standardcharges.csv"
+
+[overrides.030147]  # Banner Ocotillo
+mrf_url = "https://images.pricetransparency.healthcare/public-mrfs/banner/450233470_banner-ocotillo-medical-center_standardcharges.csv"
+
+[overrides.030030]  # Abrazo Central Campus
+mrf_url = "https://mrfs.hyvehealthcare.com/TenetHealth/621809851_vhs-of-phoenix-inc_standardcharges.json"
+
+[overrides.030083]  # Abrazo Scottsdale Campus
+mrf_url = "https://mrfs.hyvehealthcare.com/TenetHealth/621861138-1326022732_vhs-acquisition-subsidiary-number-1-inc_standardcharges.json"
+
+[overrides.030094]  # Abrazo Arrowhead
+mrf_url = "https://mrfs.hyvehealthcare.com/TenetHealth/621811285-1326022765_vhs-of-arrowhead%2C-inc_standardcharges.json"
+
+[overrides.030110]  # Abrazo West Campus
+mrf_url = "https://mrfs.hyvehealthcare.com/TenetHealth/621867232_hospital-development-of-west-phoenix-inc_standardcharges.json"
