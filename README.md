@@ -10,7 +10,7 @@ simple comparison: **procedure + insurer (or cash) → hospitals ranked by price
 Educational information, **not medical, insurance or financial advice**. A real bill can differ
 (doctor's fees billed separately, deductible, coinsurance, complications).
 
-> Status: **Phase 8 built**. Pipeline, website and automation are done and tested; the site goes live on
+> Status: **Live**, redesigned 2026-11-26 (dark & modern, animated). **Phase 8 built**. Pipeline, website and automation are done and tested; the site goes live on
 > GitHub Pages after the first push and refresh run (see [`PLAN.md`](PLAN.md), [`steps.md`](steps.md)).
 
 ```bash

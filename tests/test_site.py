@@ -63,10 +63,20 @@ def test_site_contains_no_secrets_or_raw_data():
 @pytest.mark.parametrize("page", PAGES)
 def test_page_skeleton(page):
     html = (SITE / page).read_text(encoding="utf-8")
-    assert '<html lang="en">' in html and 'name="viewport"' in html
+    assert re.search(r'<html lang="en"[ >]', html) and 'name="viewport"' in html
     assert 'id="main"' in html and 'href="assets/site.css"' in html
     script = re.search(r'src="(assets/pages/[a-z]+\.js)"', html).group(1)
     assert (SITE / script).exists()
+
+
+def test_motion_respects_reduced_motion():
+    css = (SITE / "assets" / "site.css").read_text(encoding="utf-8")
+    assert "@media (prefers-reduced-motion: reduce)" in css
+    block = css.split("@media (prefers-reduced-motion: reduce)")[1].split("@media")[0]
+    assert "animation: none" in block and "transition: none" in block and "[data-reveal]" in block
+    motion = (SITE / "assets" / "motion.js").read_text(encoding="utf-8")
+    assert "prefers-reduced-motion" in motion
+    assert 'import("./motion.js")' in (SITE / "assets" / "common.js").read_text(encoding="utf-8")
 
 
 def test_nav_links_point_at_real_pages():
@@ -113,17 +123,20 @@ def _browser_ok():
 
 
 RENDERED = [
-    ("index.html?p=mri_knee&i=uhc&t=commercial&zip=85004", ["Median price", "lowest price first", "Where they are"]),
-    ("index.html?p=lab_comprehensive_metabolic&i=cash", ["Cash (self-pay) price", "hospitals not in this comparison"]),
-    ("procedure.html", ["34 common procedures"]),
-    ("procedure.html?id=joint_replacement_inpatient", ["How prices spread", "Compared with Medicare", "Cash or insurance?"]),
-    ("hospital.html", ["Price-data grade"]),
-    ("hospital.html?ccn=030024", ["Price level", "Prices by procedure", "Score breakdown"]),
+    ("index.html?p=mri_knee&i=uhc&t=commercial&zip=85004", ["at one Phoenix hospital and", "Who is this for?", "With UnitedHealthcare, a knee MRI usually costs about",
+                                                            "What will I actually pay?", "What to do next", "Billing code 73721",
+                                                            "cheapest first", "Show these hospitals on a map", "Can I trust this?"]),
+    ("index.html?p=lab_comprehensive_metabolic&i=cash", ["If you pay yourself", "hospitals not in this list"]),
+    ("index.html?p=mri_knee&i=uhc&view=table", ["Compared with the usual price", "Price list"]),
+    ("procedure.html", ["34 common scans, tests, surgeries"]),
+    ("procedure.html?id=joint_replacement_inpatient", ["Does your insurance company matter?", "what Medicare pays", "Is paying yourself ever cheaper?"]),
+    ("hospital.html", ["Which hospitals cost more?", "Prices vs usual"]),
+    ("hospital.html?ccn=030024", ["Compared with other Phoenix hospitals", "cheaper or more expensive than usual", "How the score adds up"]),
     ("hospital.html?ccn=030103", ["wasn't processed"]),
-    ("insurer.html", ["Commercial plans", "average insurer"]),
+    ("insurer.html", ["Does your insurance company get you a better price?", "average company", "All insurance companies"]),
     ("insurer.html?id=cigna", ["Medicare Advantage plans", "Where it pays more or less"]),
-    ("quality.html", ["What we check", "Checked against the original files", "Compliance score by hospital"]),
-    ("about.html", ["Where the prices come from", "Limitations", "Not advice"]),
+    ("quality.html", ["What we look for", "We re-read prices from the original files", "Which hospitals publish a good price list?"]),
+    ("about.html", ["Why this site exists", "What this site can't tell you", "Not advice"]),
 ]
 
 
@@ -141,4 +154,5 @@ def test_rendered_page(server, page, expected):
         assert e in t, f"{page}: missing '{e}'"
     m = re.search(r'data-layout="(\d+)x(\d+)"', d)
     assert m, "layout self-check didn't run"
-    assert int(m.group(2)) <= int(m.group(1)), f"{page}: content wider than the window ({m.group(0)})"
+    culprit = re.search(r'data-overflow="([^"]*)"', d)
+    assert int(m.group(2)) <= int(m.group(1)),         f"{page}: content wider than the window ({m.group(0)}; widest element: {culprit.group(1) if culprit else '?'})"

@@ -62,7 +62,7 @@ function responsive(container, draw) {
 
 /** Toggle between a chart and its table view (same data). */
 export function withTableView(title, chartNode, tableNode) {
-  const btn = el("button", { type: "button", class: "view-toggle", "aria-pressed": "false" }, "Show as table");
+  const btn = el("button", { type: "button", class: "btn view-toggle", "aria-pressed": "false" }, "Show as table");
   const tableBox = el("div", { hidden: true }, tableNode);
   btn.addEventListener("click", () => {
     const showTable = tableBox.hidden;
@@ -79,7 +79,7 @@ export function withTableView(title, chartNode, tableNode) {
  * rows: [{label, points: [{value, label}], median?}]
  */
 export function dotStrip(rows, { log = true, format = money, xTitle = "", ref = null, refLabel = "", rowHeight = 34 } = {}) {
-  const box = el("div", { class: "chart" });
+  const box = el("div", { class: "chart animate" });
   const values = rows.flatMap((r) => r.points.map((p) => p.value)).filter((v) => v > 0);
   if (!values.length) { box.append(el("p", { class: "muted" }, "No prices to plot.")); return box; }
   let lo = Math.min(...values, ref ?? Infinity), hi = Math.max(...values, ref ?? -Infinity);
@@ -111,7 +111,7 @@ export function dotStrip(rows, { log = true, format = money, xTitle = "", ref = 
         if (!groups.has(k)) groups.set(k, []);
         groups.get(k).push(p);
       }
-      let lastLabelX = -Infinity;
+      let lastLabelX = -Infinity, n = i * 3;
       for (const [, ps] of [...groups].sort((a, b) => a[0] - b[0])) {
         const px = x(ps[0].value);
         const showCount = ps.length > 1 && px - lastLabelX >= 14;   // skip a count that would collide
@@ -120,7 +120,7 @@ export function dotStrip(rows, { log = true, format = money, xTitle = "", ref = 
           : `${ps.length} hospitals: ${ps.slice(0, 4).map((p) => p.label).join(", ")}${ps.length > 4 ? ", …" : ""}`;
         const hit = svg("g", { class: "hit" },
           svg("circle", { cx: px, cy, r: 12, fill: "transparent" }),
-          svg("circle", { class: `dot${ps[0].deemph ? " deemph" : ""}`, cx: px, cy, r: ps.length > 1 ? 6 : 5 }),
+          svg("circle", { class: `dot enter${ps[0].deemph ? " deemph" : ""}`, cx: px, cy, r: ps.length > 1 ? 6 : 5, style: `--i:${n++}` }),
           showCount ? svg("text", { class: "axis", x: px, y: cy - 9, "text-anchor": "middle" }, String(ps.length)) : null);
         hit.addEventListener("pointermove", (e) => t.show(e, format(ps[0].value), label));
         hit.addEventListener("pointerleave", () => t.hide());
@@ -140,7 +140,7 @@ export function dotStrip(rows, { log = true, format = money, xTitle = "", ref = 
 
 /** Forest plot: estimate + interval per row, reference line, one row emphasised. */
 export function forest(rows, { ref = 1, refLabel = "average", format = (v) => v.toFixed(2), xTitle = "" } = {}) {
-  const box = el("div", { class: "chart" });
+  const box = el("div", { class: "chart animate" });
   const lo0 = Math.min(ref, ...rows.map((r) => r.lo ?? r.est)), hi0 = Math.max(ref, ...rows.map((r) => r.hi ?? r.est));
   const pad = (hi0 - lo0) * 0.08;
   const lo = lo0 - pad, hi = hi0 + pad;
@@ -159,10 +159,10 @@ export function forest(rows, { ref = 1, refLabel = "average", format = (v) => v.
       const cy = top + i * rowH + rowH / 2;
       s.append(rowLabel(r.label, labelW - 10, cy + 4, r.emphasis ? "strong" : "label", labelW - 14));
       const de = r.emphasis === false ? " deemph" : "";
-      if (r.lo != null && r.hi != null) s.append(svg("line", { class: `ci${de}`, x1: x(r.lo), x2: x(r.hi), y1: cy, y2: cy }));
+      if (r.lo != null && r.hi != null) s.append(svg("line", { class: `ci enter${de}`, x1: x(r.lo), x2: x(r.hi), y1: cy, y2: cy, style: `--i:${i}` }));
       const hit = svg("g", { class: "hit" },
         svg("rect", { x: labelW, y: cy - rowH / 2, width: W - labelW - right, height: rowH, fill: "transparent" }),
-        svg("circle", { class: `dot${de}`, cx: x(r.est), cy, r: 5 }));
+        svg("circle", { class: `dot enter${de}`, cx: x(r.est), cy, r: 5, style: `--i:${i + 2}` }));
       hit.addEventListener("pointermove", (e) => t.show(e, format(r.est), `${r.label}${r.lo != null ? ` · 95% interval ${format(r.lo)} to ${format(r.hi)}` : ""}`));
       hit.addEventListener("pointerleave", () => t.hide());
       s.append(hit);
@@ -189,7 +189,7 @@ const CITIES = [
  * points: [{lat, lon, value, label, href, approx}]
  */
 export function locatorMap(points, { you = null, format = money } = {}) {
-  const box = el("div", { class: "chart" });
+  const box = el("div", { class: "chart animate" });
   const pts = points.filter((p) => p.lat && p.lon);
   if (!pts.length) return box;
   const vals = pts.map((p) => p.value).filter((v) => v != null).sort((a, b) => a - b);
@@ -209,7 +209,8 @@ export function locatorMap(points, { you = null, format = money } = {}) {
     const sx = (lon) => ((lon - lo0) / (lo1 - lo0)) * W, sy = (lat) => H - ((lat - la0) / (la1 - la0)) * H;
     const s = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img",
       "aria-label": "Map of hospitals coloured by price. The same hospitals and prices are in the table." });
-    s.append(svg("rect", { x: 0, y: 0, width: W, height: H, fill: "var(--surface-2)", rx: 10 }));
+    s.append(svg("rect", { class: "mapbg", x: 0.5, y: 0.5, width: W - 1, height: H - 1, rx: 14 }));
+    let k = 0;
     for (const [name, la, lo] of CITIES) {
       if (la < la0 || la > la1 || lo < lo0 || lo > lo1) continue;
       s.append(svg("text", { class: "city", x: sx(lo), y: sy(la) - 11, "text-anchor": "middle" }, name),
@@ -219,7 +220,7 @@ export function locatorMap(points, { you = null, format = money } = {}) {
       const fill = p.value == null ? "var(--deemph)" : `var(--seq-${step(bin(p.value))})`;
       const a = svg("a", { href: p.href, "aria-label": `${p.label}: ${p.value == null ? "no price" : format(p.value)}` },
         svg("circle", { cx: sx(p.lon), cy: sy(p.lat), r: 12, fill: "transparent" }),
-        svg("circle", { class: "dot", cx: sx(p.lon), cy: sy(p.lat), r: 6, style: `fill:${fill}` }));
+        svg("circle", { class: "dot enter", cx: sx(p.lon), cy: sy(p.lat), r: 6, style: `fill:${fill};--i:${k++}` }));
       a.addEventListener("pointermove", (e) => t.show(e, p.value == null ? "No price" : format(p.value),
         p.label + (p.approx ? " (location approximate)" : "")));
       a.addEventListener("pointerleave", () => t.hide());
@@ -240,4 +241,48 @@ export function locatorMap(points, { you = null, format = money } = {}) {
   const legend = el("div", { class: "legend", "aria-hidden": "true" }, "Price: ",
     ...bands.map((text, i) => el("span", {}, el("span", { class: "sw", style: `background:var(--seq-${step(i)})` }), text)));
   return el("div", {}, box, legend);
+}
+
+/**
+ * Range bar: lowest -> highest price on a straight (linear) scale, the band where most hospitals fall
+ * (10th-90th percentile), the median, and one dot per hospital. HTML, so it reflows on any width.
+ * points: [{value, label}]
+ */
+export function rangeBar(points, { format = money, maxDots = 40, compact = false } = {}) {
+  const vals = points.map((p) => p.value).filter((v) => v > 0).sort((a, b) => a - b);
+  const box = el("div", { class: "range" });
+  if (!vals.length) return box;
+  const q = (f) => { const i = (vals.length - 1) * f, lo = Math.floor(i), hi = Math.ceil(i); return vals[lo] + (vals[hi] - vals[lo]) * (i - lo); };
+  const min = vals[0], max = vals[vals.length - 1], med = q(0.5), p10 = q(0.1), p90 = q(0.9);
+  const span = max - min || 1;
+  const pos = (v) => `${(100 * (v - min)) / span}%`;
+  const t = tip();
+  const track = el("div", { class: "track", role: "img",
+    "aria-label": `Prices from ${format(min)} to ${format(max)}; most hospitals between ${format(p10)} and ${format(p90)}; usual price ${format(med)}.` });
+  if (vals.length >= 3) track.append(el("div", { class: "band", style: `left:${pos(p10)};width:calc(${pos(p90)} - ${pos(p10)})` }));
+  // hospitals sharing a price share a dot
+  const groups = new Map();
+  for (const p of points.filter((p) => p.value > 0)) {
+    const k = p.value.toFixed(2);
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(p);
+  }
+  // past maxDots the dots would pile into an unreadable smear: show the band and median only
+  const showDots = groups.size <= maxDots;
+  [...groups.values()].sort((a, b) => a[0].value - b[0].value).filter(() => showDots).forEach((ps, i) => {
+    const d = el("span", { class: "hdot", style: `left:${pos(ps[0].value)};--i:${i}` });
+    const label = ps.length === 1 ? ps[0].label : `${ps.length} hospitals: ${ps.slice(0, 3).map((p) => p.label).join(", ")}${ps.length > 3 ? ", …" : ""}`;
+    d.addEventListener("pointermove", (e) => t.show(e, format(ps[0].value), label));
+    d.addEventListener("pointerleave", () => t.hide());
+    track.append(d);
+  });
+  track.append(el("div", { class: "median", style: `left:${pos(med)}` }, el("span", {}, `Usual ${format(med)}`)));
+  if (compact) { box.append(track); return box; }
+  box.append(track, el("div", { class: "ends" },
+    el("div", {}, el("strong", {}, format(min)), "lowest"),
+    el("div", {}, el("strong", {}, format(max)), "highest")));
+  return el("div", {}, box, el("div", { class: "legend-line", "aria-hidden": "true" },
+    showDots ? el("span", {}, el("i", { class: "lg-dot" }), "a hospital") : "",
+    vals.length >= 3 ? el("span", {}, el("i", { class: "lg-band" }), "where most hospitals are (middle 80%)") : "",
+    el("span", {}, el("i", { class: "lg-med" }), "usual price: half charge less, half more")));
 }

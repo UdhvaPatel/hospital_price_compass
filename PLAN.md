@@ -212,3 +212,31 @@ much less compressed). Pages: Compare (main tool), Procedures, Hospitals, Insure
 | **Problems → issue** | `hpc/report.py` turns failed steps, failed downloads/parses, hospitals whose file became blocked or disappeared, and audit mismatches into a GitHub issue ("Refresh problems YYYY-MM"; later runs that month comment on it). |
 | **What's public** | Code, config, the hospital list (`data/phase0`, `data/registry`) and the site (`site/`, aggregated JSON). Not public: `.env`, pipeline working data, the vault, CMS licensed CPT files, and copies of hospitals' cms-hpt.txt files (they contain staff contact names). Checked before the first push: no keys, tokens, personal emails or local paths. |
 | **First run** | The first `refresh` on GitHub downloads everything (≈ 3 GB) and rebuilds the vault from scratch, roughly 30-45 minutes. Later runs only process changed files. |
+
+---
+
+# Website redesign (2026-11-26)
+
+Dark & modern look (navy, glass cards, drifting gradient glows, teal→blue accent) with smooth animations, and a
+simpler path to the answer. Same data and pages.
+
+| Change | Detail |
+|---|---|
+| **Home = guided 3-step finder** | ① procedure (with "Popular" chips) ② how you pay (chips: cash + the 5 largest insurers, "Other insurer…", plan type with an ⓘ explainer) ③ optional ZIP. |
+| **Answer first** | Big "Typical price" (count-up), "Most hospitals charge between X and Y", and a range bar (lowest → highest, middle-80% band, median, a dot per hospital). |
+| **Hospital cards** | Rank, name, system, price, "53% below typical" in plain words, distance, CMS stars, grade chip, "Lowest price"/"Closest" tags; Cards/Table toggle; map behind "Show on a map". |
+| **Plain words** | ⓘ explainers for typical/median, plan type, price-data grade, multiple of Medicare; "About" renamed "How it works". |
+| **Animations** | Intro rise, drifting glows, count-ups, range bar grows and dots pop in, card hover lift with glow, button light sweep, chip press, sliding nav underline, scroll reveals with stagger, shrinking blurred header, scroll progress bar, cross-fading results (View Transitions), page-to-page fade, theme switch fade. All off under "reduce motion". |
+| **Still true** | One validated data hue for charts (re-validated on the new card surface), table view for every chart, keyboard + screen-reader support, light theme via toggle, no third-party scripts. |
+| **Bugs caught while checking** | Info pop-ups widened the page (fixed: removed from layout when closed, clamped when open); hero lost its side padding on narrow screens; ~100 overlapping dots on the pooled range bar (now band + median only past 40 prices); headless captures froze mid-animation (renderer now forces reduced motion for checks). |
+
+## Plain-language pass (2026-11-26)
+
+The user found the redesign still confusing ("what and why I should open this site?"). Changes:
+
+- **Home explains why in five seconds**: a headline built from live data ("The same knee MRI costs $230 at one Phoenix hospital and $2,080 at another. Same insurance. Same scan."), a real example card, "Who is this for?" cards, then the checker.
+- **Checker asks plain questions**: "I have insurance" / "I'll pay myself"; plan types in human words ("Through work or bought myself", "Medicare plan from a private company", "AHCCCS (Arizona Medicaid)").
+- **Answer is a sentence**: "With UnitedHealthcare, a knee MRI usually costs about $544 at a Phoenix hospital", plus a "What will I actually pay?" box and "What to do next" steps with a copyable billing code.
+- **Glossary everywhere** (`FRIENDLY`, `planWords`, `vsUsual`, `plainText` in `common.js`): median → usual price, commercial → through work or bought yourself, grade → price list quality, suspect/rejected → looks odd/removed, CPT/DRG → billing code. AI summaries get the same word swaps on display (numbers untouched). Technical detail kept in "Details for the curious" folds.
+- **Nav**: Check a price · Procedures · Hospitals · Insurance companies · Can I trust this? · About.
+- **Premium finish**: film grain, cursor spotlight on cards, gradient hairline on the hero card, tighter headings, sticky "Check a price" button on phones.

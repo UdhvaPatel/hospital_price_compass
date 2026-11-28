@@ -53,7 +53,7 @@ price files are all public.
       - `NVIDIA_API_KEY` = your key from M1
       - `VAULT_TOKEN` = the token from step 3
 - [x] 5. https://github.com/UdhvaPatel/hospital_price_compass/settings/pages → **Source: GitHub Actions**.
-- [ ] 6. Tell me. I'll push the code. (The vault fills itself on the first refresh run on GitHub, so the
+- [x] 6. Tell me. I'll push the code. **Done 2026-11-25: live at https://udhvapatel.github.io/hospital_price_compass/** (The vault fills itself on the first refresh run on GitHub, so the
       vault token never has to be on your computer.)
 - [ ] 7. After the first push: GitHub → Actions → **refresh** → **Run workflow** (or wait for the 3rd of the month).
 
@@ -229,4 +229,4 @@ Every price row is labelled `good` / `suspect` / `rejected` with a reason:
 | 8 Automation | 5% | **built**; goes live with the first push + refresh run |
 | **Total** | **100%** | **95% completed / 5% pending** |
 
-**Next action:** approve the first push (M3 step 6), then run the **refresh** workflow once on GitHub (step 7).
+**Next action:** M3 step 7: GitHub → Actions → **refresh** → **Run workflow** (first run ≈ 30-45 min; fills the vault).

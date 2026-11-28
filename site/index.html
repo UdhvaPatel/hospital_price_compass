@@ -1,30 +1,82 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Compare hospital prices in Phoenix | Hospital Price Compass</title>
-  <meta name="description" content="What will a procedure cost at each Phoenix-area hospital, with your insurance or paying cash? Prices from hospitals' own published files, checked for quality.">
+  <meta name="color-scheme" content="dark light">
+  <title>Check a hospital price before you book | Hospital Price Compass, Phoenix</title>
+  <meta name="description" content="The same scan can cost ten times more at one Phoenix hospital than another, with the same insurance. Check what your scan, surgery or test costs at every hospital before you book.">
   <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-  <main id="main" class="wrap">
-    <h1>Compare hospital prices</h1>
-    <p class="lead">Pick a procedure and how you'd pay. Hospitals are ranked by the price they publish for that insurer
-      and plan type (or for paying cash). <span id="asof-top"></span></p>
+  <main id="main">
+    <!-- 1. Why you'd open this site -->
+    <section class="hero wrap" aria-labelledby="title">
+      <div class="glows" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="hero-grid">
+        <div class="intro">
+          <p class="eyebrow" style="--i:0">Phoenix hospital prices, side by side</p>
+          <h1 id="title" class="why" style="--i:1">Hospital prices in Phoenix vary a lot. Check before you book.</h1>
+          <p class="tagline" id="tagline" style="--i:2"></p>
+          <p class="lead" style="--i:3">Hospitals now have to publish their prices. We gather them so you can see what your scan, surgery or test
+            costs at every hospital, with your insurance or paying yourself, before you book.</p>
+          <div class="cta-row" style="--i:4">
+            <a class="btn primary lg" href="#check">Check a price <span aria-hidden="true">→</span></a>
+            <a href="#who">How does this help me?</a>
+          </div>
+          <p id="asof-top" style="--i:5;margin-top:1.25rem"></p>
+        </div>
+        <div class="intro"><div class="card example premium" id="example" style="--i:3" aria-live="polite"></div></div>
+      </div>
+    </section>
 
-    <form class="controls" id="controls" aria-label="Choose what to compare">
-      <div class="field"><label for="proc">Procedure</label><select id="proc"></select></div>
-      <div class="field"><label for="payer">Insurer, or cash</label><select id="payer"></select></div>
-      <div class="field"><label for="ptype">Plan type</label><select id="ptype"></select></div>
-      <div class="field"><label for="zip">Your ZIP code (optional)</label>
-        <input id="zip" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" placeholder="e.g. 85004"></div>
-      <div class="field"><label for="sort">Sort by</label>
-        <select id="sort"><option value="price">Price, low to high</option><option value="distance">Distance</option></select></div>
-    </form>
+    <!-- 2. Who it's for -->
+    <section class="wrap who" id="who" aria-labelledby="who-title">
+      <div data-reveal><p class="eyebrow">Who is this for?</p><h2 id="who-title">Anyone who'd rather not overpay</h2></div>
+      <div class="grid three" data-stagger id="who-cards"></div>
+    </section>
 
-    <div id="results" aria-live="polite"></div>
+    <!-- 3. The price checker -->
+    <section class="wrap" id="check" aria-labelledby="check-title">
+      <div data-reveal><p class="eyebrow">Check a price</p><h2 id="check-title">Answer two quick questions</h2>
+        <p class="muted">We'll show you what every Phoenix hospital charges, from lowest to highest.</p></div>
+      <form class="finder glass" id="finder" aria-label="Check a price" data-reveal>
+        <div class="steps">
+          <div class="step">
+            <label class="step-label" for="proc"><span class="step-num">1</span> What do you need?</label>
+            <select id="proc"></select>
+            <div class="popular" id="popular"><span class="label">Popular:</span></div>
+          </div>
+          <div class="step">
+            <div class="step-label" id="pay-label"><span class="step-num">2</span> How are you paying?</div>
+            <div class="choices" role="group" aria-labelledby="pay-label">
+              <button type="button" class="choice" id="pay-ins" aria-pressed="true"><b>I have insurance</b><span>We'll use your insurer's price</span></button>
+              <button type="button" class="choice" id="pay-self" aria-pressed="false"><b>I'll pay myself</b><span>No insurance, or paying cash</span></button>
+            </div>
+            <div class="subq" id="ins-questions">
+              <div class="lbl" id="co-label">Which insurance company?</div>
+              <div class="chips" id="payer-chips" role="group" aria-labelledby="co-label"></div>
+              <div id="plan-row"></div>
+            </div>
+          </div>
+          <div class="step">
+            <label class="step-label" for="zip"><span class="step-num">3</span> Your ZIP code <span class="step-hint">(optional)</span></label>
+            <input id="zip" type="text" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" autocomplete="postal-code" placeholder="e.g. 85004">
+            <p class="small muted">To see which hospitals are closest.</p>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- 4. The answer -->
+    <section class="wrap" id="results" aria-live="polite" aria-label="Your answer"></section>
+
+    <!-- 5. Can I trust it? -->
+    <section class="wrap" aria-label="Can I trust these prices?">
+      <div class="card trust" data-reveal id="trust"></div>
+    </section>
   </main>
+  <div class="sticky-cta" id="sticky-cta"><a class="btn primary lg" href="#check">Check a price <span aria-hidden="true">→</span></a></div>
   <script type="module" src="assets/pages/compare.js"></script>
 </body>
 </html>

@@ -1,16 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="no-js" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
   <title>Data quality: who publishes clean price data | Hospital Price Compass</title>
   <link rel="stylesheet" href="assets/site.css">
 </head>
 <body>
-  <main id="main" class="wrap">
-    <h1 id="title">Data quality</h1>
-    <p><span id="asof-top"></span></p>
-    <div id="content" aria-live="polite"></div>
+  <main id="main">
+    <section class="hero compact wrap" aria-labelledby="title">
+      <div class="glows" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="intro">
+        <p class="eyebrow" id="eyebrow" style="--i:0"></p>
+        <h1 id="title" style="--i:1">Data quality</h1>
+        <p class="lead" id="lead" style="--i:2"></p>
+        <p id="asof-top" style="--i:3"></p>
+      </div>
+    </section>
+    <div class="wrap" id="content" aria-live="polite"></div>
   </main>
   <script type="module" src="assets/pages/quality.js"></script>
 </body>
